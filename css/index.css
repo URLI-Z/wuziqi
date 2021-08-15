@@ -24,29 +24,29 @@ textarea,
 th,
 tr,
 ul {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    -webkit-tap-highlight-color: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body,
 html {
-    width: 100%;
-    min-height: 100%;
-    background-color: #fff;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  width: 100%;
+  min-height: 100%;
+  background-color: #fff;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 body {
-    color: #333;
-    font-family: 微软雅黑;
+  color: #333;
+  font-family: 微软雅黑;
 }
 
 h1,
@@ -55,135 +55,134 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 400;
-    font-size: 100%;
+  font-weight: 400;
+  font-size: 100%;
 }
 
 a {
-    color: #555;
+  color: #555;
 }
 
 a,
 a:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 img {
-    border: none;
+  border: none;
 }
 
 li,
 ol,
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 input,
 textarea {
-    outline: 0;
-    -webkit-appearance: none;
+  outline: 0;
+  -webkit-appearance: none;
 }
 
 ::-webkit-input-placeholder {
-    color: #b0b0b0;
+  color: #b0b0b0;
 }
 
 :-moz-placeholder,
 ::-moz-placeholder {
-    color: #b0b0b0;
+  color: #b0b0b0;
 }
 
 :-ms-input-placeholder {
-    color: #b0b0b0;
+  color: #b0b0b0;
 }
 
 [v-cloak] {
-    display: none;
+  display: none;
 }
 
 .container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    background-image: url(../images/cover.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    font-size: 0.3rem;
-    -moz-background-size: cover;
-    -o-background-size: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-image: url(../images/cover.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-size: 0.3rem;
+  -moz-background-size: cover;
+  -o-background-size: cover;
 }
 
 .tools {
-    height: 1.325rem;
-}
-
-.tools p {
-    font-size: 0.3rem;
-    margin-bottom: 0.1625rem;
+  height: 0.925rem;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  padding: 0.1125rem 0;
 }
 
 .tools button {
-    height: 0.625rem;
-    background-color: #409eff;
-    font-size: 0.25rem;
-    margin: 0 0.0125rem;
-    padding: 0 0.3125rem;
-    border: 0.0625rem solid #409eff;
-    border-radius: 0.625rem;
-    margin: 0 0.325rem;
+  height: 0.625rem;
+  width: 3.25rem;
+  background-color: #409eff;
+  font-size: 0.25rem;
+  margin: 0 0.01rem;
+  border: 0.0625rem solid #409eff;
+  border-radius: 0.625rem;
+  margin: 0 0.125rem;
 }
 
 .showDetial {
-    font-size: 0.3rem;
+  font-size: 0.3rem;
 }
 
 .showDetial p {
-    font-weight: 800;
-    padding: .125rem 0;
+  font-weight: 800;
+  padding: 0.125rem 0;
 }
 
 .cheat {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-top: 100%;
-    margin-left: -50%;
-    margin-top: -60%;
-    left: 50%;
-    top: 50%;
-    background-image: url(../images/棋盘.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+  margin-left: -50%;
+  margin-top: -60%;
+  left: 50%;
+  top: 45%;
+  background-image: url(../images/棋盘.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .chess-list {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-    height: 70%;
-    margin: auto;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  height: 70%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .chess {
-    width: 0.46rem;
-    height: 0.46rem;
-    font-size: 0.3rem;
-    position: absolute;
-    line-height: 0.75rem;
-    text-align: center;
-    background-size: cover;
-    border-radius: 50%;
+  width: 0.46rem;
+  height: 0.46rem;
+  font-size: 0.3rem;
+  position: absolute;
+  line-height: 0.75rem;
+  text-align: center;
+  background-size: cover;
+  border-radius: 50%;
 }
 
 .cell-move {
-    transition: transform 0.5s;
+  transition: transform 0.5s;
 }

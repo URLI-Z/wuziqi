@@ -10,6 +10,9 @@ const Star = {
         let currentPlayer = ref('playerOne')
         // 是否游戏结束
         const isGameOver = ref(false)
+        // 是否是电脑在自动玩
+        let isComputerAutoPlay = ref(false)
+        let timer = ref(null)
 
         // 初始化棋子
         const initChesses = () => {
@@ -33,9 +36,7 @@ const Star = {
         const useComputer = () => {
             if (isGameOver.value) return
             // 计算机遍历所有的空点，在该点模拟黑棋和白棋推算胜率
-            let emptyChesses = pageLayout.filter(item => {
-                return item.canSet === true && item.opacity === 0
-            })
+            let emptyChesses = getAllEmptyChess()
 
             // '我'的最优点落子棋子
             let finallChess = {}
@@ -84,22 +85,35 @@ const Star = {
                 }
             })
 
-            let chess = pageLayout.find(item => item.x === finallChess.x && item.y === finallChess.y)
+            let chess = findAnyElementByPoint({ x: finallChess.x, y: finallChess.y })
             // console.log(`电脑落子点X:${chess.x},Y:${chess.y},当前电脑玩家：${currentPlayer.value}`)
 
             handleSetChess(chess)
         }
 
+        // 电脑对打
+        const computerBettle = () => {
+            isComputerAutoPlay.value = true
+
+            // 游戏开始前，我们在棋盘随机位置落一个点
+            let randomChess = findAnyElementByPoint({ x: getRamdom(), y: getRamdom() })
+            randomChess !== undefined && handleSetChess(randomChess)
+            timer.value = setInterval(() => {
+                useComputer()
+            }, 1000);
+            // computerBettle()
+        }
+
         // 玩家点击事件
         const handleChessClick = (item) => {
-            if (!item.canSet || isGameOver.value) return
+            if (!item.canSet || isGameOver.value || isComputerAutoPlay.value) return
             handleSetChess(item)
             useComputer()
         }
 
         // 落子事件
         const handleSetChess = (item) => {
-            if (!item.canSet || isGameOver.value) return
+            if (item && (!item.canSet || isGameOver.value)) return
 
             // 设置当前棋子无法再点击
             item.canSet = false
@@ -113,17 +127,41 @@ const Star = {
             // 当前棋子周围相连的同色棋子最大个数
             let sameChessesLength = checkMostSameChesses(item)
 
-            // 判断游戏结果
+            // 判断游戏输赢
+            checkGameResult(sameChessesLength)
+        }
+
+        // 判断游戏输赢
+        const checkGameResult = (sameChessesLength) => {
+            // 检测时是否为和棋（无地方可下的时候）
+            let emptyChesses = getAllEmptyChess()
+            // 判断游戏结果(当某一方相连数到达五个及以上时，结束游戏)
             if (sameChessesLength >= 5) {
                 // 得出游戏结果后不允许再落子
                 setAllChessDiasbeled()
+                clearInterval(timer.value)
                 setTimeout(() => {
                     alert(`${currentPlayer.value === 'playerOne' ? '黑色' : '白色'}获胜`)
                 }, 100);
-            } else {
+            } else if (emptyChesses.length === 0) {
+                setAllChessDiasbeled()
+                clearInterval(timer.value)
+                setTimeout(() => {
+                    alert('和棋')
+                }, 100);
+            }
+            else {
                 // 当前游戏如果没有输赢结果，就切换角色，继续游戏
                 currentPlayer.value = (currentPlayer.value === 'playerOne') ? 'playerTwo' : 'playerOne'
             }
+        }
+
+        // 获得棋盘上所有的空格子,返沪一个数组，如果一个空格都没有，则数组是空
+        const getAllEmptyChess = () => {
+            let emptyChesses = pageLayout.filter(item => {
+                return item.canSet === true && item.opacity === 0
+            })
+            return emptyChesses
         }
 
         // 检查哪个方向上相邻的棋子最多，返回相连的棋子个数
@@ -221,6 +259,10 @@ const Star = {
             return element
         }
 
+        // 找到任意一个点（无论）是否在棋盘上存在
+        const findAnyElementByPoint = (point) => {
+            return pageLayout.find(item => item.x === point.x && item.y === point.y)
+        }
 
         // 判断数组中是否有某个元素 ，有的话，直接返回在当前数组中对应的对象。否则返回undefined
         const existInList = (element, list) => {
@@ -236,6 +278,12 @@ const Star = {
             pageLayout.forEach((item) => {
                 item.canSet = false
             })
+        }
+
+        // 获取一个范围内的随机数
+        const getRamdom = (len) => {
+            let length = len || 13
+            return Math.floor(Math.random() * length)
         }
 
         // 初始化游戏
@@ -254,7 +302,8 @@ const Star = {
             handleSetChess,
             handleChessClick,
             initGame,
-            useComputer
+            useComputer,
+            computerBettle
         }
     }
 }
