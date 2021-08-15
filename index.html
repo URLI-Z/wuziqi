@@ -7,44 +7,52 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
     <link rel="stylesheet" href="./css/index.css" />
-    <link rel="stylesheet" href="./css/normal.css">
-    <link rel="stylesheet" href="./css/vant.css"/>
+    <link rel="stylesheet" href="./css/normal.css" />
+    <link rel="stylesheet" href="./css/vant.css" />
     <title>五子棋</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container" id="app">
-        <p>玩家playerOne是黑色, 玩家playerTwo是白色</p>
-        <div class="tools">
-            <button @click="initGame">重新开始</button>
-            <button @click="computerBettle" style="color: rgb(17, 255, 223);">AI对打</button></button>
-            <button @click="useComputer" style="color: rgb(17, 255, 223);">挑战AI</button></button>
-            <button>玩家联机</button></button>
-        </div>
-        <div class="showDetial">
-            当前玩家
-            <p>{{currentPlayer}}</p>
-        </div>
-        <div class="cheat">
-            <transition-group name="cell" tag="div" class="chess-list">
-                <div v-for="item in pageLayout" :key="item.id" :class="item.opacity === 1?'chess chess-in':'chess'" 
-                    :title="item.id" 
-                    :style="{backgroundColor:item.backColor,opacity:item.opacity, left:item.x*0.533+0.3+'rem',bottom:item.y*0.535-2.05+'rem' }" 
-                    @click="handleChessClick(item)">
-                </div>
-            </transition-group>
-        </div>
+      <p>黑子先走，电脑白子后走</p>
+      <div class="tools">
+        <button @click="initGame">重新开始</button>
+        <button @click="computerBettle" style="color: rgb(17, 255, 223)">
+          AI对打
+        </button>
+        <button @click="giveSuggession" style="color: rgb(17, 255, 223)">
+          提示
+        </button>
+        <!-- <button>玩家联机</button> -->
+      </div>
+      <div class="showDetial">
+        当前正在下棋
+        <p>{{currentPlayer==="playerOne"?'黑子':'白子'}}</p>
+      </div>
+      <div class="cheat">
+        <transition-group name="cell" tag="div" class="chess-list">
+          <div
+            v-for="item in pageLayout"
+            :key="item.id"
+            :class="item.opacity === 1?(item.isWinChess?'chess chess-in wins':'chess chess-in'):'chess'"
+            :title="item.id"
+            :style="{backgroundColor:item.backColor,opacity:item.opacity, left:item.x*0.533+0.3+'rem',bottom:item.y*0.535-2.05+'rem' }"
+            @click="handleChessClick(item)"
+          ></div>
+        </transition-group>
+      </div>
     </div>
     <script src="./plugin/vue.js"></script>
     <script src="./plugin/vant.js"></script>
     <script src="./js/resize.js"></script>
     <script src="./js/index.js"></script>
-</body>
-
+  </body>
 </html>

@@ -24,6 +24,7 @@ const Chess = {
                         canSet: true, //能否放置
                         opacity: 0, //默认隐藏
                         backColor: 'black',
+                        isWinChess: false,
                         x: i, // 坐标X
                         y: j, // 坐标Y
                     })
@@ -48,58 +49,79 @@ const Chess = {
             // 对方的最优点棋子所在的赢法的数组长度
             let enemyMaxLength = 0
 
-            emptyChesses.forEach(item => {
+            // 遍历空格点，寻找最优落子点
+            for (let index = 0; index < emptyChesses.length; index++) {
+                const item = emptyChesses[index]
                 let tempChess = JSON.parse(JSON.stringify(item))
                 // 模拟黑棋
                 let blackChess = Object.assign(tempChess, { canSet: false, opacity: 1, backColor: 'black', })
-                let blackMaxLength = checkMostSameChesses(blackChess)
+                let blackMaxLength = checkMostSameChesses(blackChess).length
                 // 模拟白棋
                 let whiteChess = Object.assign(tempChess, { canSet: false, opacity: 1, backColor: 'white', })
-                let whiteMaxLength = checkMostSameChesses(whiteChess)
+                // 获得包含自身的某个方向的最大长度相连棋子
+                let whiteMaxLength = checkMostSameChesses(whiteChess).length
 
                 // 如果当前玩家是黑色（当前玩家此时是个电脑）
                 if (currentPlayer.value === 'playerOne') {
-                    // 我是黑棋时对方的最优落子点和落子点对应赢法的长度
-                    if (whiteMaxLength > enemyMaxLength) {
-                        enemyFinallChess = whiteChess
-                        enemyMaxLength = whiteMaxLength
-                    }
-                    // 我是黑棋时我的最优落子点和落子点对应赢法的长度
-                    if (blackMaxLength > maxLength) {
+                    if (blackMaxLength >= 5) {
                         finallChess = blackChess
-                        maxLength = blackMaxLength
+                        break
+                    } else {
+                        // 我是黑棋时对方的最优落子点和落子点对应赢法的长度
+                        if (whiteMaxLength > enemyMaxLength) {
+                            enemyFinallChess = whiteChess
+                            enemyMaxLength = whiteMaxLength
+                        }
+                        // 我是黑棋时我的最优落子点和落子点对应赢法的长度
+                        if (blackMaxLength > maxLength) {
+                            finallChess = blackChess
+                            maxLength = blackMaxLength
+                        }
+                        finallChess = (maxLength >= enemyMaxLength) ? finallChess : enemyFinallChess
                     }
                 } else {
-                    // 我是白棋时对方的最优落子点和落子点对应赢法的长度
-                    if (blackMaxLength > enemyMaxLength) {
-                        enemyFinallChess = blackChess
-                        enemyMaxLength = blackMaxLength
-                    }
-                    // 我是白棋时我的最优落子点和落子点对应赢法的长度
-                    if (whiteMaxLength > maxLength) {
+                    if (whiteMaxLength >= 5) {
                         finallChess = whiteChess
-                        maxLength = whiteMaxLength
+                        break
+                    } else {
+                        // 我是白棋时对方的最优落子点和落子点对应赢法的长度
+                        if (blackMaxLength > enemyMaxLength) {
+                            enemyFinallChess = blackChess
+                            enemyMaxLength = blackMaxLength
+                        }
+                        // 我是白棋时我的最优落子点和落子点对应赢法的长度
+                        if (whiteMaxLength > maxLength) {
+                            finallChess = whiteChess
+                            maxLength = whiteMaxLength
+                        }
+                        finallChess = (maxLength >= enemyMaxLength) ? finallChess : enemyFinallChess
                     }
                 }
-                finallChess = (maxLength >= enemyMaxLength) ? finallChess : enemyFinallChess
-            })
+            }
 
             let chess = findAnyElementByPoint({ x: finallChess.x, y: finallChess.y })
-            // console.log(`电脑落子点X:${chess.x},Y:${chess.y},当前电脑玩家：${currentPlayer.value}`)
 
+            // 落子
             handleSetChess(chess)
+        }
+
+        // 提示
+        const giveSuggession = () => {
+            useComputer()
+            setTimeout(() => {
+                useComputer()
+            }, 500);
         }
 
         // 电脑对打
         const computerBettle = () => {
             isComputerAutoPlay.value = true
-            console.log('电脑对打')
             // 游戏开始前，我们在棋盘随机位置落一个点
             let randomChess = findAnyElementByPoint({ x: getRamdom(), y: getRamdom() })
             randomChess !== undefined && handleSetChess(randomChess)
             timer.value = setInterval(() => {
                 useComputer()
-            }, 1000);
+            }, 500);
         }
 
         // 玩家点击事件
@@ -123,20 +145,24 @@ const Chess = {
             item.backColor = (currentPlayer.value === 'playerOne') ? 'black' : 'white'
 
             // 当前棋子周围相连的同色棋子最大个数
-            let sameChessesLength = checkMostSameChesses(item)
+            let sameChessesArray = checkMostSameChesses(item)
 
             // 判断游戏输赢
-            checkGameResult(sameChessesLength)
+            checkGameResult(sameChessesArray)
         }
 
         // 判断游戏输赢
-        const checkGameResult = (sameChessesLength) => {
+        const checkGameResult = (sameChessesArray) => {
             // 检测时是否为和棋（无地方可下的时候）
             let emptyChesses = getAllEmptyChess()
             // 判断游戏结果(当某一方相连数到达五个及以上时，结束游戏)
-            if (sameChessesLength >= 5) {
+            if (sameChessesArray.length >= 5) {
                 // 得出游戏结果后不允许再落子
                 setAllChessDiasbeled()
+                // 添加赢时的闪烁动画
+                sameChessesArray.forEach(item => {
+                    item.isWinChess = true
+                })
                 clearInterval(timer.value)
                 setTimeout(() => {
                     vant.Toast(`${currentPlayer.value === 'playerOne' ? '黑色' : '白色'}获胜`);
@@ -154,7 +180,7 @@ const Chess = {
             }
         }
 
-        // 获得棋盘上所有的空格子,返沪一个数组，如果一个空格都没有，则数组是空
+        // 获得棋盘上所有的空格子,返回一个数组，如果一个空格都没有，则数组是空
         const getAllEmptyChess = () => {
             let emptyChesses = pageLayout.filter(item => {
                 return item.canSet === true && item.opacity === 0
@@ -162,11 +188,11 @@ const Chess = {
             return emptyChesses
         }
 
-        // 检查哪个方向上相邻的棋子最多，返回相连的棋子个数
+        // 检查哪个方向上相邻的棋子最多，返回相连的棋子个数数组
         const checkMostSameChesses = (item) => {
             let directionArray = getAllDirectionLength(item)
             directionArray.sort((a, b) => { return b.length - a.length })
-            return directionArray[0].length
+            return directionArray[0]
         }
 
         // 寻找四个方向的相邻点数组 item 起始点 返回一个二维数组
@@ -306,7 +332,8 @@ const Chess = {
             handleChessClick,
             initGame,
             useComputer,
-            computerBettle
+            computerBettle,
+            giveSuggession
         }
     }
 }
