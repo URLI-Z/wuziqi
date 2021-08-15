@@ -57,19 +57,6 @@ const Star = {
                 let whiteMaxLength = checkMostSameChesses(whiteChess)
 
                 // 如果当前玩家是黑色（当前玩家此时是个电脑）
-                // if (
-                //     (currentPlayer.value === 'playerOne') && (blackMaxLength >= whiteMaxLength) && (blackMaxLength > maxLength)) {
-                //     finallChess = blackChess
-                //     maxLength = blackMaxLength
-                // } else if (
-                //     (currentPlayer.value === 'playerTwo') &&
-                //     (whiteMaxLength >= blackMaxLength) &&
-                //     (whiteMaxLength > maxLength)) {
-                //     finallChess = whiteChess
-                //     maxLength = whiteMaxLength
-                // }
-
-                // 如果当前玩家是黑色（当前玩家此时是个电脑）
                 if (currentPlayer.value === 'playerOne') {
                     // 我是黑棋时对方的最优落子点和落子点对应赢法的长度
                     if (whiteMaxLength > enemyMaxLength) {
@@ -81,37 +68,38 @@ const Star = {
                         finallChess = blackChess
                         maxLength = blackMaxLength
                     }
-                    finallChess = (maxLength > enemyMaxLength) ? blackChess : whiteChess
+                    finallChess = (maxLength >= enemyMaxLength) ? finallChess : enemyFinallChess
                 } else {
                     // 我是白棋时对方的最优落子点和落子点对应赢法的长度
-                    if (blackMaxLength > maxLength) {
+                    if (blackMaxLength > enemyMaxLength) {
                         enemyFinallChess = blackChess
                         enemyMaxLength = blackMaxLength
                     }
                     // 我是白棋时我的最优落子点和落子点对应赢法的长度
-                    if (whiteMaxLength > enemyMaxLength) {
+                    if (whiteMaxLength > maxLength) {
                         finallChess = whiteChess
                         maxLength = whiteMaxLength
                     }
-                    finallChess = (enemyMaxLength > maxLength) ? whiteChess : blackChess
+                    finallChess = (enemyMaxLength >= maxLength) ? enemyFinallChess : finallChess
                 }
             })
 
             let chess = pageLayout.find(item => item.x === finallChess.x && item.y === finallChess.y)
-            console.log(`电脑落子点X:${chess.x},Y:${chess.y},当前电脑玩家：${currentPlayer.value}`)
+            // console.log(`电脑落子点X:${chess.x},Y:${chess.y},当前电脑玩家：${currentPlayer.value}`)
 
             handleSetChess(chess)
         }
 
         // 玩家点击事件
         const handleChessClick = (item) => {
+            if (!item.canSet || isGameOver.value) return
             handleSetChess(item)
             useComputer()
         }
 
         // 落子事件
         const handleSetChess = (item) => {
-            if (!item.canSet) return
+            if (!item.canSet || isGameOver.value) return
 
             // 设置当前棋子无法再点击
             item.canSet = false
