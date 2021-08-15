@@ -13,6 +13,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/normal.css">
+    <link rel="stylesheet" href="./css/vant.css"/>
     <title>五子棋</title>
 </head>
 
@@ -31,7 +33,7 @@
         </div>
         <div class="cheat">
             <transition-group name="cell" tag="div" class="chess-list">
-                <div v-for="item in pageLayout" :key="item.id" class="chess" 
+                <div v-for="item in pageLayout" :key="item.id" :class="item.opacity === 1?'chess chess-in':'chess'" 
                     :title="item.id" 
                     :style="{backgroundColor:item.backColor,opacity:item.opacity, left:item.x*0.533+0.3+'rem',bottom:item.y*0.535-2.05+'rem' }" 
                     @click="handleChessClick(item)">
@@ -40,6 +42,7 @@
         </div>
     </div>
     <script src="./plugin/vue.js"></script>
+    <script src="./plugin/vant.js"></script>
     <script src="./js/resize.js"></script>
     <script src="./js/index.js"></script>
 </body>

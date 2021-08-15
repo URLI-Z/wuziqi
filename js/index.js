@@ -3,7 +3,7 @@ const {
     reactive,
     onMounted
 } = Vue;
-const Star = {
+const Chess = {
     setup() {
         const pageLayout = reactive([])
         // 玩家playerOne是黑色 玩家playerTwo是白色
@@ -69,7 +69,6 @@ const Star = {
                         finallChess = blackChess
                         maxLength = blackMaxLength
                     }
-                    finallChess = (maxLength >= enemyMaxLength) ? finallChess : enemyFinallChess
                 } else {
                     // 我是白棋时对方的最优落子点和落子点对应赢法的长度
                     if (blackMaxLength > enemyMaxLength) {
@@ -81,8 +80,8 @@ const Star = {
                         finallChess = whiteChess
                         maxLength = whiteMaxLength
                     }
-                    finallChess = (enemyMaxLength >= maxLength) ? enemyFinallChess : finallChess
                 }
+                finallChess = (maxLength >= enemyMaxLength) ? finallChess : enemyFinallChess
             })
 
             let chess = findAnyElementByPoint({ x: finallChess.x, y: finallChess.y })
@@ -94,14 +93,13 @@ const Star = {
         // 电脑对打
         const computerBettle = () => {
             isComputerAutoPlay.value = true
-
+            console.log('电脑对打')
             // 游戏开始前，我们在棋盘随机位置落一个点
             let randomChess = findAnyElementByPoint({ x: getRamdom(), y: getRamdom() })
             randomChess !== undefined && handleSetChess(randomChess)
             timer.value = setInterval(() => {
                 useComputer()
             }, 1000);
-            // computerBettle()
         }
 
         // 玩家点击事件
@@ -141,13 +139,13 @@ const Star = {
                 setAllChessDiasbeled()
                 clearInterval(timer.value)
                 setTimeout(() => {
-                    alert(`${currentPlayer.value === 'playerOne' ? '黑色' : '白色'}获胜`)
+                    vant.Toast(`${currentPlayer.value === 'playerOne' ? '黑色' : '白色'}获胜`);
                 }, 100);
             } else if (emptyChesses.length === 0) {
                 setAllChessDiasbeled()
                 clearInterval(timer.value)
                 setTimeout(() => {
-                    alert('和棋')
+                    vant.Toast('和棋');
                 }, 100);
             }
             else {
@@ -288,6 +286,11 @@ const Star = {
 
         // 初始化游戏
         const initGame = () => {
+            isGameOver.value = false
+            isComputerAutoPlay.value = false
+            currentPlayer.value = 'playerOne'
+            clearInterval(timer.value)
+            timer.value = null
             initChesses()
         }
 
@@ -308,4 +311,6 @@ const Star = {
     }
 }
 
-Vue.createApp(Star).mount('#app')
+const app = Vue.createApp(Chess)
+app.use(vant)
+app.mount('#app')
