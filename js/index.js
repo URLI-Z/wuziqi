@@ -126,16 +126,16 @@ const Star = {
             let sameChessesLength = checkMostSameChesses(item)
 
             // 判断游戏结果
-            // setTimeout(() => {
             if (sameChessesLength >= 5) {
                 // 得出游戏结果后不允许再落子
                 setAllChessDiasbeled()
-                alert(`${currentPlayer.value === 'playerOne' ? '黑色' : '白色'}获胜`)
+                setTimeout(() => {
+                    alert(`${currentPlayer.value === 'playerOne' ? '黑色' : '白色'}获胜`)
+                }, 100);
             } else {
                 // 当前游戏如果没有输赢结果，就切换角色，继续游戏
                 currentPlayer.value = (currentPlayer.value === 'playerOne') ? 'playerTwo' : 'playerOne'
             }
-            // }, 100);
         }
 
         // 检查哪个方向上相邻的棋子最多，返回相连的棋子个数
